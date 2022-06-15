@@ -1,4 +1,4 @@
-﻿namespace Dashboard.API.Configurations {
+﻿namespace API.Configurations {
   internal static class ServiceExtensions {
     public static ConfigureHostBuilder AddConfigurations(this ConfigureHostBuilder host) {
       host.ConfigureAppConfiguration((context, config) => {

@@ -2,7 +2,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dashboard.API.Controllers {
+namespace API.Controllers {
   [EnableCors("MyPolicy")]
   [Route("[controller]")]
   public class AuthController : Controller {

@@ -1,0 +1,5 @@
+{
+    "ConnectionStrings": {
+        "PostgreDB": "Data Source=localhost\\Dashboard;User ID=postgres;password=123456"
+    }
+}

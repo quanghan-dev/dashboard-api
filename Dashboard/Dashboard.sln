@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.API", "Dashboard.API\Dashboard.API.csproj", "{306F7FD1-7623-4C60-9D7A-9EF08DB704ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{306F7FD1-7623-4C60-9D7A-9EF08DB704ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.Application", "Dashboard.Application\Dashboard.Application.csproj", "{9C53DA77-6D39-45C9-9B36-B853CEBB5DCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{9C53DA77-6D39-45C9-9B36-B853CEBB5DCA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.Core", "Dashboard.Core\Dashboard.Core.csproj", "{E5578CEE-E66E-4DD3-992D-7B2F2DDAD893}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{E5578CEE-E66E-4DD3-992D-7B2F2DDAD893}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard.DataAccess", "Dashboard.DataAccess\Dashboard.DataAccess.csproj", "{926556D0-AEC8-48BA-A4B3-D619E41CCD24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{926556D0-AEC8-48BA-A4B3-D619E41CCD24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

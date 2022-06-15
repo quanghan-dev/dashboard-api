@@ -2,6 +2,8 @@
 using Dashboard.API.Configurations;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Dashboard.DataAccess.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -22,6 +24,11 @@ builder.Services.AddCors(opt => {
            .AllowAnyHeader()
            .AllowAnyMethod();
   });
+});
+
+//add database
+builder.Services.AddDbContext<DashboardContext>(opt => {
+  opt.UseNpgsql(builder.Configuration.GetConnectionString("PostgreDB"));
 });
 
 builder.Services.AddControllers();
