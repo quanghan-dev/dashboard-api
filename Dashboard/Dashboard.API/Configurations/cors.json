@@ -1,0 +1,5 @@
+{
+  "CoreSettings": {
+    "Backend": "https://localhost:7285"
+  }
+}
