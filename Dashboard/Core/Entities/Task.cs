@@ -1,10 +1,15 @@
-namespace Core.Entities {
-  public class Task {
-    public Guid Id { get; set; }
-    public string? TaskName { get; set; }
-    public bool IsCompleted { get; set; }
-    public Guid UserId { get; set; }
+using System.ComponentModel.DataAnnotations.Schema;
 
-    public Account? Account { get; set; }
-  }
+namespace Core.Entities
+{
+    public class Task
+    {
+        public Guid Id { get; set; }
+        public string? TaskName { get; set; }
+        public bool IsCompleted { get; set; }
+        [ForeignKey("Account")]
+        public Guid UserId { get; set; }
+
+        public Account? Account { get; set; }
+    }
 }
