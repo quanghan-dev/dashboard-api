@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Persistence.Migrations.Postgre
 {
     [DbContext(typeof(DashboardContext))]
-    [Migration("20220616133156_PostgreSQL")]
+    [Migration("20220617114732_PostgreSQL")]
     partial class PostgreSQL
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

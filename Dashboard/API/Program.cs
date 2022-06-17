@@ -4,6 +4,10 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Persistence;
+using API.Filters;
+using FluentValidation.AspNetCore;
+using Application.Models.Validators;
+using API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -24,7 +28,7 @@ builder.Services.AddCors(opt =>
 {
     opt.AddPolicy(name: "MyPolicy", builder =>
     {
-        builder.WithOrigins(configuration.GetValue<string>("CoreSettings:Backend"))
+        builder.WithOrigins(configuration.GetValue<string>("CorsSettings:Backend"))
                .AllowAnyHeader()
                .AllowAnyMethod();
     });
@@ -36,7 +40,13 @@ builder.Services.AddDbContext<DashboardContext>(opt =>
     opt.UseNpgsql(builder.Configuration.GetConnectionString("PostgreDB"));
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(
+    config => config.Filters.Add(typeof(ValidateModelAttribute))
+    )
+    .AddFluentValidation(
+        options => options.RegisterValidatorsFromAssemblyContaining<IValidationsMarker>()
+    );
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
@@ -85,7 +95,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.RoutePrefix = "";
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Dashboard v1");
+    });
 }
 
 app.UseHttpsRedirection();
@@ -96,6 +110,8 @@ app.UseCors("MyPolicy");
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 

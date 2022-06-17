@@ -1,4 +1,6 @@
 ﻿using Application.Common.Email;
+using Application.Services;
+using Application.Services.Impl;
 using DataAccess.UnitOfWork;
 using DataAccess.UnitOfWork.Impl;
 
@@ -32,6 +34,10 @@ namespace API.Configurations
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton(config.GetSection("SmtpSettings").Get<SmtpSettings>());
+
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IUtilService, UtilService>();
+            services.AddScoped<IEmailService, EmailService>();
 
             return services;
         }

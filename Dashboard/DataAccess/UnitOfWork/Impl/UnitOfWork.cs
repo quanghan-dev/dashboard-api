@@ -7,18 +7,42 @@ namespace DataAccess.UnitOfWork.Impl
     public class UnitOfWork : IUnitOfWork
     {
         private DashboardContext _context;
+        private IAccountRepository? _accountRepository;
+        private IConfigsRepository? _configsRepository;
+        private IDashboardRepository? _dashboardRepository;
+        private IContactRepository? _contactRepository;
+        private ITaskRepository? _taskRepository;
+        private IWidgetRepository? _widgetRepository;
 
-        public IAccountRepository Accounts => Accounts ?? new AccountRepository(_context);
+        public IAccountRepository Accounts
+        {
+            get { _accountRepository ??= new AccountRepository(_context); return _accountRepository; }
+        }
 
-        public IConfigsRepository Configs => Configs ?? new ConfigsRepository(_context);
+        public IConfigsRepository Configs
+        {
+            get { _configsRepository ??= new ConfigsRepository(_context); return _configsRepository; }
+        }
 
-        public IDashboardRepository Dashboards => Dashboards ?? new DashboardRepository(_context);
+        public IDashboardRepository Dashboards
+        {
+            get { _dashboardRepository ??= new DashboardRepository(_context); return _dashboardRepository; }
+        }
 
-        public IContactRepository Contacts => Contacts ?? new ContactRepository(_context);
+        public IContactRepository Contacts
+        {
+            get { _contactRepository ??= new ContactRepository(_context); return _contactRepository; }
+        }
 
-        public ITaskRepository Tasks => Tasks ?? new TaskRepository(_context);
+        public ITaskRepository Tasks
+        {
+            get { _taskRepository ??= new TaskRepository(_context); return _taskRepository; }
+        }
 
-        public IWidgetRepository Widgets => Widgets ?? new WidgetRepository(_context);
+        public IWidgetRepository Widgets
+        {
+            get { _widgetRepository ??= new WidgetRepository(_context); return _widgetRepository; }
+        }
 
         public UnitOfWork(DashboardContext context)
         {

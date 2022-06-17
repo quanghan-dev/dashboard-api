@@ -32,11 +32,11 @@ namespace DataAccess.Persistence
             => optionsBuilder.UseNpgsql(
                 "Host=localhost;Port=5432;Database=DashboardDB;Username=postgres;Password=123456");
 
-        public DbSet<Account>? Accounts { get; set; }
-        public DbSet<Configs>? Configs { get; set; }
-        public DbSet<Contact>? Contacts { get; set; }
-        public DbSet<Dashboard>? Dashboards { get; set; }
-        public DbSet<Core.Entities.Task>? Tasks { get; set; }
-        public DbSet<Widget>? Widgets { get; set; }
+        public DbSet<Account> Accounts { get; set; } = null!;
+        public DbSet<Configs> Configs { get; set; } = null!;
+        public DbSet<Contact> Contacts { get; set; } = null!;
+        public DbSet<Dashboard> Dashboards { get; set; } = null!;
+        public DbSet<Core.Entities.Task> Tasks { get; set; } = null!;
+        public DbSet<Widget> Widgets { get; set; } = null!;
     }
 }
