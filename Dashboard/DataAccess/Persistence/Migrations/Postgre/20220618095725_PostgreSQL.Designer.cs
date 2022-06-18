@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Persistence.Migrations.Postgre
 {
     [DbContext(typeof(DashboardContext))]
-    [Migration("20220618033252_PostgreSQL")]
+    [Migration("20220618095725_PostgreSQL")]
     partial class PostgreSQL
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -172,6 +172,9 @@ namespace DataAccess.Persistence.Migrations.Postgre
 
                     b.Property<bool?>("IsRevoked")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");

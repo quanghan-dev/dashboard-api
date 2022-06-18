@@ -171,6 +171,9 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     b.Property<bool?>("IsRevoked")
                         .HasColumnType("boolean");
 
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 

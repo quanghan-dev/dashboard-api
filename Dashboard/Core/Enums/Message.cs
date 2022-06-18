@@ -19,6 +19,14 @@ namespace Core.Enums
             ValidatorMessage.Used_Email => "Email address is already in use",
             ValidatorMessage.Used_Username => "Username is already in use",
             ValidatorMessage.Invalid_Username_Password => "Invalid username or password",
+            ValidatorMessage.Unauthorized => "Unauthorized User",
+            _ => throw new ArgumentException(message: "Invalid message")
+        };
+
+        public static string GetMessage(ErrorMessage message) => message switch
+        {
+            ErrorMessage.Invalid_Token => "Invalid Token",
+
             _ => throw new ArgumentException(message: "Invalid message")
         };
     }

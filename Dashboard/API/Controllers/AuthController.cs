@@ -1,7 +1,10 @@
 using Application.Models.Accounts;
+using Application.Models.Tokens;
 using Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 namespace API.Controllers
 {
@@ -33,6 +36,11 @@ namespace API.Controllers
         {
             return Ok(await _accountService.ActivateAccount(code));
         }
+        [HttpGet("test")]
+        public async Task<IActionResult> Test()
+        {
+            return Ok("haha");
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginAccount loginAccount)
@@ -40,6 +48,19 @@ namespace API.Controllers
             return Ok(await _tokenService.CreateToken(_accountService.GetUserId(loginAccount)));
         }
 
+        [Authorize]
+        [HttpPut("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            string JWTtoken = Request.Headers[HeaderNames.Authorization];
 
+            return Ok(await _tokenService.Logout(JWTtoken[7..]));
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] TokenDto tokenDto)
+        {
+            return Ok(await _tokenService.RefreshToken(tokenDto));
+        }
     }
 }

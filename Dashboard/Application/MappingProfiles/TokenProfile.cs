@@ -8,7 +8,7 @@ namespace Application.MappingProfiles
     {
         public TokenProfile()
         {
-            CreateMap<Token, CreateTokenResponse>();
+            CreateMap<Token, TokenDto>();
         }
     }
 }

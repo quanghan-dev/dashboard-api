@@ -46,7 +46,7 @@ builder.Services.AddDbContext<DashboardContext>(opt =>
 
 #region Controller
 builder.Services.AddControllers(
-    config => config.Filters.Add(typeof(ValidateModelAttribute))
+    config => { config.Filters.Add(typeof(ValidateModelAttribute)); config.Filters.Add(typeof(CustomAuthorizeAttribute)); }
     )
     .AddFluentValidation(
         options => options.RegisterValidatorsFromAssemblyContaining<IValidationsMarker>()

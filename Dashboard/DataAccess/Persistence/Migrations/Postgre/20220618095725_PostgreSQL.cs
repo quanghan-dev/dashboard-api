@@ -95,6 +95,7 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     AccessToken = table.Column<string>(type: "text", nullable: true),
                     IsRevoked = table.Column<bool>(type: "boolean", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     ExpiredDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },

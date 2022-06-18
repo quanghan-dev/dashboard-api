@@ -25,6 +25,7 @@ namespace API.Configurations
                       .AddJsonFile($"{configurationsDirectory}/database.json", optional: false, reloadOnChange: true)
                       .AddJsonFile($"{configurationsDirectory}/mail.json", optional: false, reloadOnChange: true)
                       .AddJsonFile($"{configurationsDirectory}/jwt.json", optional: false, reloadOnChange: true)
+                      .AddJsonFile($"{configurationsDirectory}/cache.json", optional: false, reloadOnChange: true)
                       .AddEnvironmentVariables();
             });
             return host;
@@ -37,6 +38,14 @@ namespace API.Configurations
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+            #region Redis
+            services.AddStackExchangeRedisCache(opt =>
+            {
+                opt.Configuration = config.GetValue<string>("CacheSettings:Redis");
+            });
+            #endregion
+
+            #region Services
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton(config.GetSection("SmtpSettings").Get<SmtpSettings>());
@@ -44,6 +53,7 @@ namespace API.Configurations
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUtilService, UtilService>();
             services.AddScoped<IEmailService, EmailService>();
+            #endregion
 
             #region Authentication
             var key = Encoding.ASCII.GetBytes(config.GetValue<string>("Jwt:Custom:Key"));
@@ -67,21 +77,6 @@ namespace API.Configurations
             {
                 x.SaveToken = true;
                 x.TokenValidationParameters = tokenValidationParameters;
-
-                x.Events = new JwtBearerEvents
-                {
-                    OnChallenge = async context =>
-                    {
-                        // Call this to skip the default logic and avoid using the default response
-                        context.HandleResponse();
-
-                        // Write to the response
-                        context.Response.StatusCode = 401;
-                        string response = JsonSerializer.Serialize(
-                            ApiResult<string>.Failure(new List<string>() { "Unauthorized" }));
-                        await context.Response.WriteAsync(response);
-                    }
-                };
             });
             #endregion
 

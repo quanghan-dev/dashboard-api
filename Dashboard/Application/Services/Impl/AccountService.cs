@@ -30,7 +30,7 @@ namespace Application.Services.Impl
         /// Register Account
         /// </summary>
         /// <param name="request"></param>
-        /// <returns>Activate Code</returns>
+        /// <returns></returns>
         public async Task<ApiResult<string>> RegisterAccount(RegisterAccountRequest request)
         {
             try
@@ -89,7 +89,23 @@ namespace Application.Services.Impl
         {
             try
             {
-                return _unitOfWork.Accounts.FindAccountByUsernameAndPassword(account.Username!, account.Password!).UserId;
+                Account acc = _unitOfWork.Accounts.FindAccountByUsernameAndPassword(account.Username!, account.Password!);
+                if (acc == null) throw new UnauthorizedAccessException(Message.GetMessage(ValidatorMessage.Invalid_Username_Password));
+                return acc.UserId;
+            }
+            catch (System.Exception) { throw; }
+        }
+
+        /// <summary>
+        /// Logout
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns>logout message</returns>
+        public ApiResult<string> Logout(string token)
+        {
+            try
+            {
+                throw new NotImplementedException();
             }
             catch (System.Exception) { throw; }
         }

@@ -7,7 +7,8 @@ namespace Core.Enums
         Invalid_Username,
         Used_Username,
         Invalid_Password_Length,
-        Invalid_Username_Password
+        Invalid_Username_Password,
+        Unauthorized
     }
 
     public enum ServiceMessage
@@ -16,5 +17,10 @@ namespace Core.Enums
         Invalid_Activate_Code,
         Activated_Account,
         Activate_Message,
+    }
+
+    public enum ErrorMessage
+    {
+        Invalid_Token
     }
 }
