@@ -36,11 +36,6 @@ namespace API.Controllers
         {
             return Ok(await _accountService.ActivateAccount(code));
         }
-        [HttpGet("test")]
-        public async Task<IActionResult> Test()
-        {
-            return Ok("haha");
-        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginAccount loginAccount)
