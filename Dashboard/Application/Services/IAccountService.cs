@@ -1,3 +1,4 @@
+using Application.Models;
 using Application.Models.Accounts;
 
 namespace Application.Services
@@ -9,6 +10,20 @@ namespace Application.Services
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Activate Code</returns>
-        Task<string> RegisterAccount(RegisterAccountRequest request);
+        Task<ApiResult<string>> RegisterAccount(RegisterAccountRequest request);
+
+        /// <summary>
+        /// Activate Account
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns>Result</returns>
+        Task<ApiResult<string>> ActivateAccount(string code);
+
+        /// <summary>
+        /// Get User Id
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns>User Id</returns>
+        Guid GetUserId(LoginAccount account);
     }
 }

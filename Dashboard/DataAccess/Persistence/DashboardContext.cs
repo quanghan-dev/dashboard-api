@@ -24,6 +24,7 @@ namespace DataAccess.Persistence
             builder.Entity<Contact>().HasKey(entity => new { entity.Id });
             builder.Entity<Core.Entities.Task>().HasKey(entity => new { entity.Id });
             builder.Entity<Widget>().HasKey(entity => new { entity.WidgetId });
+            builder.Entity<Token>().HasKey(entity => new { entity.RefreshToken });
             builder.HasDefaultSchema("public");
             base.OnModelCreating(builder);
         }
@@ -38,5 +39,6 @@ namespace DataAccess.Persistence
         public DbSet<Dashboard> Dashboards { get; set; } = null!;
         public DbSet<Core.Entities.Task> Tasks { get; set; } = null!;
         public DbSet<Widget> Widgets { get; set; } = null!;
+        public DbSet<Token> Tokens { get; set; } = null!;
     }
 }

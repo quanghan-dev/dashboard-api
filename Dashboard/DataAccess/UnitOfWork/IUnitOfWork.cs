@@ -10,6 +10,7 @@ namespace DataAccess.UnitOfWork
         IContactRepository Contacts { get; }
         ITaskRepository Tasks { get; }
         IWidgetRepository Widgets { get; }
+        ITokenRepository Tokens { get; }
         Task SaveChangesAsync();
     }
 }

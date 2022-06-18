@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Persistence.Migrations.Postgre
 {
     [DbContext(typeof(DashboardContext))]
-    [Migration("20220617114732_PostgreSQL")]
+    [Migration("20220618033252_PostgreSQL")]
     partial class PostgreSQL
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -155,6 +155,34 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     b.ToTable("Tasks", "public");
                 });
 
+            modelBuilder.Entity("Core.Entities.Token", b =>
+                {
+                    b.Property<Guid>("RefreshToken")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AccessToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ExpiredDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool?>("IsRevoked")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("RefreshToken");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tokens", "public");
+                });
+
             modelBuilder.Entity("Core.Entities.Widget", b =>
                 {
                     b.Property<Guid>("WidgetId")
@@ -206,6 +234,17 @@ namespace DataAccess.Persistence.Migrations.Postgre
                 });
 
             modelBuilder.Entity("Core.Entities.Task", b =>
+                {
+                    b.HasOne("Core.Entities.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("Core.Entities.Token", b =>
                 {
                     b.HasOne("Core.Entities.Account", "Account")
                         .WithMany()

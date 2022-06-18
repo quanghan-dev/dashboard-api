@@ -1,3 +1,4 @@
+using Application.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -13,7 +14,7 @@ namespace API.Filters
                     .SelectMany(modelState => modelState.Errors)
                     .Select(modelError => modelError.ErrorMessage);
 
-                context.Result = new BadRequestObjectResult(errors);
+                context.Result = new BadRequestObjectResult(ApiResult<string>.Failure(errors));
             }
 
             await next();

@@ -1,7 +1,6 @@
 ﻿using Serilog;
 using API.Configurations;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Persistence;
 using API.Filters;
@@ -9,21 +8,24 @@ using FluentValidation.AspNetCore;
 using Application.Models.Validators;
 using API.Middleware;
 
+#region Configuration
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
-//add configurations
 builder.Host.AddConfigurations();
 builder.Services.AddApplicationServices(configuration);
+#endregion
 
+#region Logging
 //logging
 builder.Host.UseSerilog((_, config) =>
 {
     config.WriteTo.Console()
     .ReadFrom.Configuration(configuration);
 });
+#endregion
 
-//add CORS
+#region Cors
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy(name: "MyPolicy", builder =>
@@ -33,13 +35,16 @@ builder.Services.AddCors(opt =>
                .AllowAnyMethod();
     });
 });
+#endregion
 
-//add database
+#region Database
 builder.Services.AddDbContext<DashboardContext>(opt =>
 {
     opt.UseNpgsql(builder.Configuration.GetConnectionString("PostgreDB"));
 });
+#endregion
 
+#region Controller
 builder.Services.AddControllers(
     config => config.Filters.Add(typeof(ValidateModelAttribute))
     )
@@ -48,7 +53,9 @@ builder.Services.AddControllers(
     );
 
 builder.Services.AddEndpointsApiExplorer();
+#endregion
 
+#region Swagger
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dashboard", Version = "v1" });
@@ -77,21 +84,12 @@ builder.Services.AddSwaggerGen(c =>
       }
   });
 });
+#endregion
 
-builder.Services.AddAuthentication(x =>
-{
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(x =>
-{
-    x.Audience = "api1";
-    x.Authority = "http://localhost:7285";
-    x.RequireHttpsMetadata = false;
-});
 
+#region App Settings
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -116,3 +114,4 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 
 app.Run();
+#endregion

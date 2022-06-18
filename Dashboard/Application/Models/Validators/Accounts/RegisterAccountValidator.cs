@@ -1,4 +1,5 @@
 using Application.Models.Accounts;
+using Core.Enums;
 using DataAccess.UnitOfWork;
 using FluentValidation;
 
@@ -13,25 +14,25 @@ namespace Application.Models.Validators
 
             RuleFor(acc => acc.Email)
                 .EmailAddress()
-                .WithMessage("Email address is not valid")
+                .WithMessage(Message.GetMessage(ValidatorMessage.Invalid_Email))
             .Must((acc, cancellationToken) =>
             {
                 return _unitOfWork.Accounts.FindAccountByEmail(acc.Email) == null;
             })
-            .WithMessage("Email address is already in use");
+            .WithMessage(Message.GetMessage(ValidatorMessage.Used_Email));
 
             RuleFor(acc => acc.Username)
                 .NotEmpty()
-                .WithMessage("Username is not valid")
+                .WithMessage(Message.GetMessage(ValidatorMessage.Invalid_Username))
             .Must((acc, cancellationToken) =>
             {
                 return _unitOfWork.Accounts.FindAccountByUsername(acc.Username) == null;
             })
-            .WithMessage("Username is already in use");
+            .WithMessage(Message.GetMessage(ValidatorMessage.Used_Username));
 
             RuleFor(acc => acc.Password)
                 .MinimumLength(8)
-                .WithMessage("Password should have minimum 8 characters");
+                .WithMessage(Message.GetMessage(ValidatorMessage.Invalid_Password_Length));
         }
     }
 }

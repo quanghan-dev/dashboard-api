@@ -1,9 +1,11 @@
 using Application.Common.Email;
+using Application.Exceptions;
+using Application.Models;
 using Application.Models.Accounts;
 using AutoMapper;
 using Core.Entities;
+using Core.Enums;
 using DataAccess.UnitOfWork;
-using Serilog;
 
 namespace Application.Services.Impl
 {
@@ -13,7 +15,7 @@ namespace Application.Services.Impl
         private readonly IMapper _mapper;
         private readonly IUtilService _utilService;
         private readonly IEmailService _emailService;
-        private const string SERVER_URL = "https://localhost:7285/auth";
+        private const string SERVER_URL = "https://localhost:7285/auth/activation";
 
         public AccountService(IUnitOfWork unitOfWork, IMapper mapper,
         IUtilService utilService, IEmailService emailService)
@@ -29,7 +31,7 @@ namespace Application.Services.Impl
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Activate Code</returns>
-        public async Task<string> RegisterAccount(RegisterAccountRequest request)
+        public async Task<ApiResult<string>> RegisterAccount(RegisterAccountRequest request)
         {
             try
             {
@@ -52,12 +54,44 @@ namespace Application.Services.Impl
                 _unitOfWork.Accounts.Add(account);
                 await _unitOfWork.SaveChangesAsync();
             }
-            catch (Exception e)
+            catch (Exception) { throw; }
+            return ApiResult<string>.Success(Message.GetMessage(ServiceMessage.Activate_Message));
+        }
+
+        /// <summary>
+        /// Activate Account
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns>Account</returns>
+        public async Task<ApiResult<string>> ActivateAccount(string code)
+        {
+            try
             {
-                Log.Error(e.Message);
-                throw;
+                Account account = await _unitOfWork.Accounts.FindAccountByActivateCode(code);
+                if (account == null)
+                    throw new NotFoundException(Message.GetMessage(ServiceMessage.Invalid_Activate_Code));
+
+                account.IsActive = true;
+
+                _unitOfWork.Accounts.Update(account);
+                await _unitOfWork.SaveChangesAsync();
             }
-            return "Please activate your account via the link sent to your email.";
+            catch (Exception) { throw; }
+            return ApiResult<string>.Success(Message.GetMessage(ServiceMessage.Activated_Account));
+        }
+
+        /// <summary>
+        /// Get User Id
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns>User Id</returns>
+        public Guid GetUserId(LoginAccount account)
+        {
+            try
+            {
+                return _unitOfWork.Accounts.FindAccountByUsernameAndPassword(account.Username!, account.Password!).UserId;
+            }
+            catch (System.Exception) { throw; }
         }
     }
 }

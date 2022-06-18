@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Application.Exceptions;
+using Application.Models;
 
 namespace API.Middleware
 {
@@ -40,7 +41,7 @@ namespace API.Middleware
                 _ => code
             };
 
-            var result = JsonSerializer.Serialize(errors);
+            var result = JsonSerializer.Serialize(ApiResult<string>.Failure(errors));
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = code;

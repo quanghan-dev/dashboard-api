@@ -1,8 +1,13 @@
-﻿using Application.Common.Email;
+﻿using System.Text;
+using System.Text.Json;
+using Application.Common.Email;
+using Application.Models;
 using Application.Services;
 using Application.Services.Impl;
 using DataAccess.UnitOfWork;
 using DataAccess.UnitOfWork.Impl;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Configurations
 {
@@ -19,6 +24,7 @@ namespace API.Configurations
                       .AddJsonFile($"{configurationsDirectory}/cors.json", optional: false, reloadOnChange: true)
                       .AddJsonFile($"{configurationsDirectory}/database.json", optional: false, reloadOnChange: true)
                       .AddJsonFile($"{configurationsDirectory}/mail.json", optional: false, reloadOnChange: true)
+                      .AddJsonFile($"{configurationsDirectory}/jwt.json", optional: false, reloadOnChange: true)
                       .AddEnvironmentVariables();
             });
             return host;
@@ -38,6 +44,48 @@ namespace API.Configurations
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUtilService, UtilService>();
             services.AddScoped<IEmailService, EmailService>();
+
+            #region Authentication
+            var key = Encoding.ASCII.GetBytes(config.GetValue<string>("Jwt:Custom:Key"));
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = false,
+                RequireExpirationTime = false,
+                ClockSkew = TimeSpan.Zero
+            };
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.SaveToken = true;
+                x.TokenValidationParameters = tokenValidationParameters;
+
+                x.Events = new JwtBearerEvents
+                {
+                    OnChallenge = async context =>
+                    {
+                        // Call this to skip the default logic and avoid using the default response
+                        context.HandleResponse();
+
+                        // Write to the response
+                        context.Response.StatusCode = 401;
+                        string response = JsonSerializer.Serialize(
+                            ApiResult<string>.Failure(new List<string>() { "Unauthorized" }));
+                        await context.Response.WriteAsync(response);
+                    }
+                };
+            });
+            #endregion
+
+            services.AddScoped<ITokenService, TokenService>();
 
             return services;
         }

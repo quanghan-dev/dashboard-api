@@ -87,6 +87,30 @@ namespace DataAccess.Persistence.Migrations.Postgre
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tokens",
+                schema: "public",
+                columns: table => new
+                {
+                    RefreshToken = table.Column<Guid>(type: "uuid", nullable: false),
+                    AccessToken = table.Column<string>(type: "text", nullable: true),
+                    IsRevoked = table.Column<bool>(type: "boolean", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ExpiredDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tokens", x => x.RefreshToken);
+                    table.ForeignKey(
+                        name: "FK_Tokens_Accounts_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "public",
+                        principalTable: "Accounts",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Dashboards",
                 schema: "public",
                 columns: table => new
@@ -164,6 +188,12 @@ namespace DataAccess.Persistence.Migrations.Postgre
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tokens_UserId",
+                schema: "public",
+                table: "Tokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Widgets_ConfigsId",
                 schema: "public",
                 table: "Widgets",
@@ -184,6 +214,10 @@ namespace DataAccess.Persistence.Migrations.Postgre
 
             migrationBuilder.DropTable(
                 name: "Tasks",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "Tokens",
                 schema: "public");
 
             migrationBuilder.DropTable(
