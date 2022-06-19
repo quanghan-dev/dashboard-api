@@ -52,7 +52,7 @@ namespace API.Controllers
 
         [Authorize]
         [HttpGet()]
-        public async Task<IActionResult> GetTasks()
+        public async Task<IActionResult> GetTasks([FromQuery] string? keyword)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             IEnumerable<Claim> claim = identity!.Claims;
@@ -61,7 +61,7 @@ namespace API.Controllers
             string claimName = claim.Where(x => x.Type == ClaimTypes.Name).FirstOrDefault()!.ToString();
             string userId = claimName[(claimName.LastIndexOf(':') + 2)..];
 
-            return Ok(await _taskService.GetTasks(userId));
+            return Ok(await _taskService.GetTasks(userId, keyword));
         }
 
         [Authorize]

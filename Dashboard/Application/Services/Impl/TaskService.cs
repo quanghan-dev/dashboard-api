@@ -95,13 +95,13 @@ namespace Application.Services.Impl
         /// Get Tasks
         /// </summary>
         /// <param name="userId"></param>
+        /// <param name="keyword"></param>
         /// <returns></returns>
-        public async Task<ApiResult<List<TaskResponse>>> GetTasks(string userId)
+        public async Task<ApiResult<List<TaskResponse>>> GetTasks(string userId, string? keyword)
         {
             try
             {
-                List<Core.Entities.Task>? tasks = await _unitOfWork.Tasks
-                    .FindListAsync(t => t.UserId.Equals(Guid.Parse(userId)) && t.Status.Equals(Status.Active));
+                List<Core.Entities.Task>? tasks = await _unitOfWork.Tasks.GetTasksByKeyword(Guid.Parse(userId), keyword);
 
                 if (!tasks.Any())
                     throw new NotFoundException(Message.GetMessage(ErrorMessage.Resource_Not_Found));

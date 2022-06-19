@@ -17,8 +17,9 @@ namespace Application.Services
         /// Get sTasks
         /// </summary>        
         /// <param name="userId"></param>
+        /// <param name="keyword"></param>
         /// <returns></returns>
-        Task<ApiResult<List<TaskResponse>>> GetTasks(string userId);
+        Task<ApiResult<List<TaskResponse>>> GetTasks(string userId, string? keyword);
 
         /// <summary>
         /// Get Task By Id
