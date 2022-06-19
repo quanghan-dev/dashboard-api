@@ -8,21 +8,14 @@ namespace DataAccess.UnitOfWork.Impl
     {
         private DashboardContext _context;
         private IAccountRepository? _accountRepository;
-        private IConfigsRepository? _configsRepository;
         private IDashboardRepository? _dashboardRepository;
         private IContactRepository? _contactRepository;
         private ITaskRepository? _taskRepository;
-        private IWidgetRepository? _widgetRepository;
         private ITokenRepository? _tokenRepository;
 
         public IAccountRepository Accounts
         {
             get { _accountRepository ??= new AccountRepository(_context); return _accountRepository; }
-        }
-
-        public IConfigsRepository Configs
-        {
-            get { _configsRepository ??= new ConfigsRepository(_context); return _configsRepository; }
         }
 
         public IDashboardRepository Dashboards
@@ -40,10 +33,6 @@ namespace DataAccess.UnitOfWork.Impl
             get { _taskRepository ??= new TaskRepository(_context); return _taskRepository; }
         }
 
-        public IWidgetRepository Widgets
-        {
-            get { _widgetRepository ??= new WidgetRepository(_context); return _widgetRepository; }
-        }
         public ITokenRepository Tokens
         {
             get { _tokenRepository ??= new TokenRepository(_context); return _tokenRepository; }
