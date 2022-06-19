@@ -38,7 +38,8 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     AdditionalProp1 = table.Column<string>(type: "jsonb", nullable: true),
                     AdditionalProp2 = table.Column<string>(type: "jsonb", nullable: true),
-                    AdditionalProp3 = table.Column<string>(type: "jsonb", nullable: true)
+                    AdditionalProp3 = table.Column<string>(type: "jsonb", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,7 +58,8 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     Department = table.Column<string>(type: "text", nullable: true),
                     Project = table.Column<string>(type: "text", nullable: true),
                     Avatar = table.Column<string>(type: "text", nullable: true),
-                    EmployeeId = table.Column<Guid>(type: "uuid", nullable: false)
+                    EmployeeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,6 +74,7 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     TaskName = table.Column<string>(type: "text", nullable: true),
                     IsCompleted = table.Column<bool>(type: "boolean", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -120,6 +123,7 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     Title = table.Column<string>(type: "text", nullable: true),
                     LayoutType = table.Column<string>(type: "text", nullable: true),
                     ConfigsId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -150,6 +154,7 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     WidgetType = table.Column<string>(type: "text", nullable: true),
                     MinWidth = table.Column<int>(type: "integer", nullable: true),
                     minHeight = table.Column<int>(type: "integer", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
                     ConfigsId = table.Column<Guid>(type: "uuid", nullable: true),
                     DashboardId = table.Column<Guid>(type: "uuid", nullable: true)
                 },

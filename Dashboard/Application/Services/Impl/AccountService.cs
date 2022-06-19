@@ -95,19 +95,5 @@ namespace Application.Services.Impl
             }
             catch (System.Exception) { throw; }
         }
-
-        /// <summary>
-        /// Logout
-        /// </summary>
-        /// <param name="token"></param>
-        /// <returns>logout message</returns>
-        public ApiResult<string> Logout(string token)
-        {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (System.Exception) { throw; }
-        }
     }
 }

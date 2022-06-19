@@ -67,6 +67,9 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     b.Property<string>("AdditionalProp3")
                         .HasColumnType("jsonb");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.ToTable("Configs", "public");
@@ -96,6 +99,9 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     b.Property<string>("Project")
                         .HasColumnType("text");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Title")
                         .HasColumnType("text");
 
@@ -115,6 +121,9 @@ namespace DataAccess.Persistence.Migrations.Postgre
 
                     b.Property<string>("LayoutType")
                         .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .HasColumnType("text");
@@ -139,6 +148,9 @@ namespace DataAccess.Persistence.Migrations.Postgre
 
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("boolean");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<string>("TaskName")
                         .HasColumnType("text");
@@ -197,6 +209,9 @@ namespace DataAccess.Persistence.Migrations.Postgre
                         .HasColumnType("uuid");
 
                     b.Property<int?>("MinWidth")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")

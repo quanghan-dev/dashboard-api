@@ -4,6 +4,7 @@ namespace Core.Enums
     {
         public static string GetMessage(ServiceMessage message) => message switch
         {
+            ServiceMessage.Successful => "Successful",
             ServiceMessage.Succeeded_Register => "Your account is activated",
             ServiceMessage.Invalid_Activate_Code => "Invalid activate code",
             ServiceMessage.Activated_Account => "Your account is activated",
@@ -26,7 +27,7 @@ namespace Core.Enums
         public static string GetMessage(ErrorMessage message) => message switch
         {
             ErrorMessage.Invalid_Token => "Invalid Token",
-
+            ErrorMessage.Resource_Not_Found => "Resource Not Found",
             _ => throw new ArgumentException(message: "Invalid message")
         };
     }

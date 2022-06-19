@@ -7,6 +7,7 @@ namespace Core.Entities
         public Guid Id { get; set; }
         public string? TaskName { get; set; }
         public bool IsCompleted { get; set; }
+        public int Status { get; set; }
         [ForeignKey("Account")]
         public Guid UserId { get; set; }
 

@@ -10,5 +10,6 @@ namespace Core.Entities
         public string? Project { get; set; }
         public string? Avatar { get; set; }
         public Guid EmployeeId { get; set; }
+        public int Status { get; set; }
     }
 }

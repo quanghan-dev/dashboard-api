@@ -7,6 +7,7 @@ namespace Core.Entities
         public string? WidgetType { get; set; }
         public int? MinWidth { get; set; }
         public int? minHeight { get; set; }
+        public int Status { get; set; }
 
         public Configs? Configs { get; set; }
     }

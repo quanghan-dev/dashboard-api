@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Application.Exceptions;
 using Application.Models;
 using Application.Models.Tokens;
 using AutoMapper;

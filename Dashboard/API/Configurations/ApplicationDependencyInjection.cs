@@ -53,6 +53,7 @@ namespace API.Configurations
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUtilService, UtilService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<ITaskService, TaskService>();
             #endregion
 
             #region Authentication

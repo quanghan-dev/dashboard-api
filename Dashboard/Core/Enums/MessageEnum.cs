@@ -13,6 +13,7 @@ namespace Core.Enums
 
     public enum ServiceMessage
     {
+        Successful,
         Succeeded_Register,
         Invalid_Activate_Code,
         Activated_Account,
@@ -21,6 +22,7 @@ namespace Core.Enums
 
     public enum ErrorMessage
     {
-        Invalid_Token
+        Invalid_Token,
+        Resource_Not_Found
     }
 }

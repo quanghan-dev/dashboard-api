@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Application.Exceptions;
 using Application.Models;
+using Core.Enums;
 
 namespace API.Middleware
 {
