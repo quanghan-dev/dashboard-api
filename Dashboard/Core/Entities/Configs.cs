@@ -11,6 +11,5 @@ namespace Core.Entities
         public string? AdditionalProp2 { get; set; }
         [Column(TypeName = "jsonb")]
         public string? AdditionalProp3 { get; set; }
-        public int Status { get; set; }
     }
 }

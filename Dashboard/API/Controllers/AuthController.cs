@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application.Models.Accounts;
 using Application.Models.Tokens;
 using Application.Services;
@@ -49,7 +50,14 @@ namespace API.Controllers
         {
             string JWTtoken = Request.Headers[HeaderNames.Authorization];
 
-            return Ok(await _tokenService.Logout(JWTtoken[7..]));
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IEnumerable<Claim> claim = identity!.Claims;
+
+            //get user id from token
+            string claimName = claim.Where(x => x.Type == ClaimTypes.Name).FirstOrDefault()!.ToString();
+            string userId = claimName[(claimName.LastIndexOf(':') + 2)..];
+
+            return Ok(await _tokenService.Logout(Guid.Parse(userId), JWTtoken[7..]));
         }
 
         [HttpPost("refresh-token")]

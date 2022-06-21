@@ -8,7 +8,11 @@ namespace Core.Enums
         Used_Username,
         Invalid_Password_Length,
         Invalid_Username_Password,
-        Unauthorized
+        Unauthorized,
+        Invalid_Name,
+        Invalid_Title,
+        Invalid_Department,
+        Invalid_Project,
     }
 
     public enum ServiceMessage
@@ -23,6 +27,7 @@ namespace Core.Enums
     public enum ErrorMessage
     {
         Invalid_Token,
-        Resource_Not_Found
+        Resource_Not_Found,
+        Invalid_File
     }
 }
