@@ -15,9 +15,10 @@ namespace Application.Services
         /// <summary>
         /// Logout
         /// </summary>
-        /// <param name="accessToken"></param>
+        /// <param name="userId"></param>
+        /// <param name="acccessToken"></param>
         /// <returns>Logout meessage</returns>
-        public Task<ApiResult<string>> Logout(string accessToken);
+        public Task<ApiResult<string>> Logout(Guid userId, string acccessToken);
 
         /// <summary>
         /// Refresh Token

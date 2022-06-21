@@ -7,8 +7,6 @@ namespace Core.Entities
         public Guid Id { get; set; }
         public string? Title { get; set; }
         public string? LayoutType { get; set; }
-        public Configs? Configs { get; set; }
-        public int Status { get; set; }
         [ForeignKey("Account")]
         public Guid UserId { get; set; }
 

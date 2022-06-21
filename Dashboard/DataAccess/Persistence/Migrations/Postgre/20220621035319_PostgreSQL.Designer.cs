@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Persistence.Migrations.Postgre
 {
     [DbContext(typeof(DashboardContext))]
-    [Migration("20220619092948_PostgreSQL")]
+    [Migration("20220621035319_PostgreSQL")]
     partial class PostgreSQL
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,9 +69,6 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     b.Property<string>("AdditionalProp3")
                         .HasColumnType("jsonb");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.ToTable("Configs", "public");
@@ -89,7 +86,7 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     b.Property<string>("Department")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("EmployeeId")
+                    b.Property<Guid?>("EmployeeId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("FirstName")
@@ -109,6 +106,8 @@ namespace DataAccess.Persistence.Migrations.Postgre
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EmployeeId");
+
                     b.ToTable("Contacts", "public");
                 });
 
@@ -118,14 +117,8 @@ namespace DataAccess.Persistence.Migrations.Postgre
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ConfigsId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("LayoutType")
                         .HasColumnType("text");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .HasColumnType("text");
@@ -134,8 +127,6 @@ namespace DataAccess.Persistence.Migrations.Postgre
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ConfigsId");
 
                     b.HasIndex("UserId");
 
@@ -173,9 +164,6 @@ namespace DataAccess.Persistence.Migrations.Postgre
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("AccessToken")
-                        .HasColumnType("text");
-
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -184,9 +172,6 @@ namespace DataAccess.Persistence.Migrations.Postgre
 
                     b.Property<bool?>("IsRevoked")
                         .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -234,12 +219,17 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     b.ToTable("Widgets", "public");
                 });
 
+            modelBuilder.Entity("Core.Entities.Contact", b =>
+                {
+                    b.HasOne("Core.Entities.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("Core.Entities.Dashboard", b =>
                 {
-                    b.HasOne("Core.Entities.Configs", "Configs")
-                        .WithMany()
-                        .HasForeignKey("ConfigsId");
-
                     b.HasOne("Core.Entities.Account", "Account")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -247,8 +237,6 @@ namespace DataAccess.Persistence.Migrations.Postgre
                         .IsRequired();
 
                     b.Navigation("Account");
-
-                    b.Navigation("Configs");
                 });
 
             modelBuilder.Entity("Core.Entities.Task", b =>
