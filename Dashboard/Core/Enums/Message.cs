@@ -21,6 +21,10 @@ namespace Core.Enums
             ValidatorMessage.Used_Username => "Username is already in use",
             ValidatorMessage.Invalid_Username_Password => "Invalid username or password",
             ValidatorMessage.Unauthorized => "Unauthorized User",
+            ValidatorMessage.Invalid_Name => "Invalid Name",
+            ValidatorMessage.Invalid_Department => "Invalid Department",
+            ValidatorMessage.Invalid_Project => "Invalid Project",
+            ValidatorMessage.Invalid_Title => "Invalid Title",
             _ => throw new ArgumentException(message: "Invalid message")
         };
 
@@ -28,6 +32,7 @@ namespace Core.Enums
         {
             ErrorMessage.Invalid_Token => "Invalid Token",
             ErrorMessage.Resource_Not_Found => "Resource Not Found",
+            ErrorMessage.Invalid_File => "Invalid File",
             _ => throw new ArgumentException(message: "Invalid message")
         };
     }

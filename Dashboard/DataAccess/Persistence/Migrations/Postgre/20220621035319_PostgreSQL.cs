@@ -38,8 +38,7 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     AdditionalProp1 = table.Column<string>(type: "jsonb", nullable: true),
                     AdditionalProp2 = table.Column<string>(type: "jsonb", nullable: true),
-                    AdditionalProp3 = table.Column<string>(type: "jsonb", nullable: true),
-                    Status = table.Column<int>(type: "integer", nullable: false)
+                    AdditionalProp3 = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,12 +57,40 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     Department = table.Column<string>(type: "text", nullable: true),
                     Project = table.Column<string>(type: "text", nullable: true),
                     Avatar = table.Column<string>(type: "text", nullable: true),
-                    EmployeeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uuid", nullable: true),
                     Status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Contacts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Contacts_Accounts_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalSchema: "public",
+                        principalTable: "Accounts",
+                        principalColumn: "UserId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Dashboards",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    LayoutType = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Dashboards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Dashboards_Accounts_UserId",
+                        column: x => x.UserId,
+                        principalSchema: "public",
+                        principalTable: "Accounts",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,10 +122,8 @@ namespace DataAccess.Persistence.Migrations.Postgre
                 columns: table => new
                 {
                     RefreshToken = table.Column<Guid>(type: "uuid", nullable: false),
-                    AccessToken = table.Column<string>(type: "text", nullable: true),
                     IsRevoked = table.Column<bool>(type: "boolean", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     ExpiredDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -112,36 +137,6 @@ namespace DataAccess.Persistence.Migrations.Postgre
                         principalTable: "Accounts",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Dashboards",
-                schema: "public",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: true),
-                    LayoutType = table.Column<string>(type: "text", nullable: true),
-                    ConfigsId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Dashboards", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Dashboards_Accounts_UserId",
-                        column: x => x.UserId,
-                        principalSchema: "public",
-                        principalTable: "Accounts",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Dashboards_Configs_ConfigsId",
-                        column: x => x.ConfigsId,
-                        principalSchema: "public",
-                        principalTable: "Configs",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -176,10 +171,10 @@ namespace DataAccess.Persistence.Migrations.Postgre
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Dashboards_ConfigsId",
+                name: "IX_Contacts_EmployeeId",
                 schema: "public",
-                table: "Dashboards",
-                column: "ConfigsId");
+                table: "Contacts",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dashboards_UserId",
@@ -231,15 +226,15 @@ namespace DataAccess.Persistence.Migrations.Postgre
                 schema: "public");
 
             migrationBuilder.DropTable(
+                name: "Configs",
+                schema: "public");
+
+            migrationBuilder.DropTable(
                 name: "Dashboards",
                 schema: "public");
 
             migrationBuilder.DropTable(
                 name: "Accounts",
-                schema: "public");
-
-            migrationBuilder.DropTable(
-                name: "Configs",
                 schema: "public");
         }
     }

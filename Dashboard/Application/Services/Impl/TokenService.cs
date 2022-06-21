@@ -62,22 +62,18 @@ namespace Application.Services.Impl
                         if (!tk.IsRevoked!.Value)
                         {
                             tk.IsRevoked = true;
-                            tk.UpdatedDate = DateTime.UtcNow;
 
                             _unitOfWork.Tokens.Update(tk);
-                            if (_distributedCache.GetString(tk.AccessToken) != null)
-                                await _distributedCache.SetStringAsync(tk.AccessToken, true.ToString());
                         }
                     }
                 }
 
+                string accessToken = CreateAccessToken(userId.ToString());
                 token = new Token
                 {
-                    AccessToken = CreateAccessToken(userId.ToString()),
                     RefreshToken = Guid.NewGuid(),
                     UserId = userId,
                     CreatedDate = DateTime.UtcNow,
-                    UpdatedDate = DateTime.UtcNow,
                     IsRevoked = false,
                     ExpiredDate = DateTime.UtcNow.AddMonths(1)
                 };
@@ -86,27 +82,38 @@ namespace Application.Services.Impl
                 await _unitOfWork.SaveChangesAsync();
 
                 //store token to Redis
-                _distributedCache.SetString(token.AccessToken, false.ToString(),
+                _distributedCache.SetString(accessToken, false.ToString(),
                     new DistributedCacheEntryOptions() { SlidingExpiration = TimeSpan.FromHours(6) });
+
+                return ApiResult<TokenDto>.Success(new TokenDto
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = token.RefreshToken
+                });
+
             }
             catch (Exception) { throw; }
-            return ApiResult<TokenDto>.Success(_mapper.Map<TokenDto>(token));
         }
 
         /// <summary>
         /// Logout
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="accessToken"></param>
         /// <returns>Logout message</returns>
-        public async Task<ApiResult<string>> Logout(string accessToken)
+        public async Task<ApiResult<string>> Logout(Guid userId, string accessToken)
         {
             try
             {
-                Token token = await _unitOfWork.Tokens.GetTokenByAccessToken(accessToken);
-                token.IsRevoked = true;
-                token.ExpiredDate = DateTime.UtcNow;
+                List<Token> tokens = await _unitOfWork.Tokens.FindListAsync(t => t.UserId.Equals(userId) && !t.IsRevoked!.Value);
+                foreach (var token in tokens)
+                {
+                    token.IsRevoked = true;
+                    token.ExpiredDate = DateTime.UtcNow;
 
-                _unitOfWork.Tokens.Update(token);
+                    _unitOfWork.Tokens.Update(token);
+                }
+
                 await _unitOfWork.SaveChangesAsync();
 
                 await _distributedCache.SetStringAsync(accessToken, true.ToString());
@@ -122,25 +129,21 @@ namespace Application.Services.Impl
         /// <returns>Refresh & access token</returns>
         public async Task<ApiResult<string>> RefreshToken(TokenDto tokenDto)
         {
-            Token token;
+            string accessToken;
             try
             {
-                token = (await _unitOfWork.Tokens.FindAsync(t => t.RefreshToken.Equals(tokenDto.RefreshToken)))!;
+                Token token = (await _unitOfWork.Tokens.FindAsync(t => t.RefreshToken.Equals(tokenDto.RefreshToken)))!;
                 if (token is null)
                     throw new UnauthorizedAccessException(Message.GetMessage(ErrorMessage.Invalid_Token));
 
-                token.AccessToken = VerifyAndGenerateAccessToken(tokenDto, token);
-                token.UpdatedDate = DateTime.UtcNow;
-
-                _unitOfWork.Tokens.Update(token);
-                await _unitOfWork.SaveChangesAsync();
+                accessToken = VerifyAndGenerateAccessToken(tokenDto, token);
 
                 //store token to Redis
-                _distributedCache.SetString(token.AccessToken, false.ToString(),
+                _distributedCache.SetString(accessToken, false.ToString(),
                     new DistributedCacheEntryOptions() { SlidingExpiration = TimeSpan.FromHours(6) });
             }
             catch (System.Exception) { throw; }
-            return ApiResult<string>.Success(_mapper.Map<TokenDto>(token).AccessToken!);
+            return ApiResult<string>.Success(accessToken);
         }
 
         /// <summary>
@@ -182,11 +185,12 @@ namespace Application.Services.Impl
 
             try
             {
-                //validation 1
+                #region validation 1
                 var tokenInVerification = jwtTokenHandler
                             .ValidateToken(tokenDto.AccessToken, _tokenValidationParameters, out var validatedToken);
+                #endregion
 
-                // Validation 2 - Validate encryption alg
+                #region  Validation 2 - Validate encryption alg
                 if (validatedToken is JwtSecurityToken jwtSecurityToken)
                 {
                     var result = jwtSecurityToken.Header.Alg
@@ -195,27 +199,32 @@ namespace Application.Services.Impl
                     if (result == false)
                         throw new UnauthorizedAccessException(Message.GetMessage(ErrorMessage.Invalid_Token));
                 }
+                #endregion
 
-                // Validation 3 - validate expiry date of Access Token
+                #region  Validation 3 - validate expiry date of Access Token
                 var utcExpiryDate = long.Parse(tokenInVerification.Claims
                                         .FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp)!.Value);
 
                 if (_utilService.UnixTimeStampToDateTime(utcExpiryDate) > DateTime.UtcNow)
                     throw new UnauthorizedAccessException(Message.GetMessage(ErrorMessage.Invalid_Token));
+                #endregion
 
-                // Validation 4 - validate if Refresh Token is revoked
+                #region  Validation 4 - validate if Refresh Token is revoked
                 if (token.IsRevoked is true)
                     throw new UnauthorizedAccessException(Message.GetMessage(ErrorMessage.Invalid_Token));
+                #endregion
 
-                // Validation 5 - validate User Id
+                #region  Validation 5 - validate User Id
                 var userId = tokenInVerification.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)!.Value;
 
                 if (!token.UserId.ToString().Equals(userId))
                     throw new UnauthorizedAccessException(Message.GetMessage(ErrorMessage.Invalid_Token));
+                #endregion
 
-                // Validation 6 - validate expiry date oof Refresh Token
+                #region  Validation 6 - validate expiry date of Refresh Token
                 if (token.ExpiredDate < DateTime.UtcNow)
                     throw new UnauthorizedAccessException(Message.GetMessage(ErrorMessage.Invalid_Token));
+                #endregion
 
                 // update current token
                 string accessToken = CreateAccessToken(userId);
