@@ -31,21 +31,6 @@ namespace DataAccess.Persistence.Migrations.Postgre
                 });
 
             migrationBuilder.CreateTable(
-                name: "Configs",
-                schema: "public",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AdditionalProp1 = table.Column<string>(type: "jsonb", nullable: true),
-                    AdditionalProp2 = table.Column<string>(type: "jsonb", nullable: true),
-                    AdditionalProp3 = table.Column<string>(type: "jsonb", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Configs", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Contacts",
                 schema: "public",
                 columns: table => new
@@ -150,24 +135,19 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     MinWidth = table.Column<int>(type: "integer", nullable: true),
                     minHeight = table.Column<int>(type: "integer", nullable: true),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    ConfigsId = table.Column<Guid>(type: "uuid", nullable: true),
-                    DashboardId = table.Column<Guid>(type: "uuid", nullable: true)
+                    DashboardId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Configs = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Widgets", x => x.WidgetId);
                     table.ForeignKey(
-                        name: "FK_Widgets_Configs_ConfigsId",
-                        column: x => x.ConfigsId,
-                        principalSchema: "public",
-                        principalTable: "Configs",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Widgets_Dashboards_DashboardId",
                         column: x => x.DashboardId,
                         principalSchema: "public",
                         principalTable: "Dashboards",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -195,12 +175,6 @@ namespace DataAccess.Persistence.Migrations.Postgre
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Widgets_ConfigsId",
-                schema: "public",
-                table: "Widgets",
-                column: "ConfigsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Widgets_DashboardId",
                 schema: "public",
                 table: "Widgets",
@@ -223,10 +197,6 @@ namespace DataAccess.Persistence.Migrations.Postgre
 
             migrationBuilder.DropTable(
                 name: "Widgets",
-                schema: "public");
-
-            migrationBuilder.DropTable(
-                name: "Configs",
                 schema: "public");
 
             migrationBuilder.DropTable(

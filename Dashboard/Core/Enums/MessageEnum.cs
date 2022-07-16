@@ -28,6 +28,7 @@ namespace Core.Enums
     {
         Invalid_Token,
         Resource_Not_Found,
-        Invalid_File
+        Invalid_File,
+        Inactive_Account
     }
 }

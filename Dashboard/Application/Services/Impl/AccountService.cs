@@ -95,5 +95,20 @@ namespace Application.Services.Impl
             }
             catch (System.Exception) { throw; }
         }
+
+        /// <summary>
+        /// Check Active Account
+        /// </summary>
+        /// <param name="username"></param>
+        public void CheckActiveAccount(string? username)
+        {
+            try
+            {
+                Account account = _unitOfWork.Accounts.FindAccountByUsername(username);
+                if (!account.IsActive)
+                    throw new UnauthorizedAccessException(Message.GetMessage(ErrorMessage.Inactive_Account));
+            }
+            catch (System.Exception) { throw; }
+        }
     }
 }

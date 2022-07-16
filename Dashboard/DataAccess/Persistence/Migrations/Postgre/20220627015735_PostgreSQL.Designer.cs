@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Persistence.Migrations.Postgre
 {
     [DbContext(typeof(DashboardContext))]
-    [Migration("20220621035319_PostgreSQL")]
+    [Migration("20220627015735_PostgreSQL")]
     partial class PostgreSQL
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,26 +52,6 @@ namespace DataAccess.Persistence.Migrations.Postgre
                     b.HasKey("UserId");
 
                     b.ToTable("Accounts", "public");
-                });
-
-            modelBuilder.Entity("Core.Entities.Configs", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("AdditionalProp1")
-                        .HasColumnType("jsonb");
-
-                    b.Property<string>("AdditionalProp2")
-                        .HasColumnType("jsonb");
-
-                    b.Property<string>("AdditionalProp3")
-                        .HasColumnType("jsonb");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Configs", "public");
                 });
 
             modelBuilder.Entity("Core.Entities.Contact", b =>
@@ -189,10 +169,11 @@ namespace DataAccess.Persistence.Migrations.Postgre
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ConfigsId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Configs")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
 
-                    b.Property<Guid?>("DashboardId")
+                    b.Property<Guid>("DashboardId")
                         .HasColumnType("uuid");
 
                     b.Property<int?>("MinWidth")
@@ -211,8 +192,6 @@ namespace DataAccess.Persistence.Migrations.Postgre
                         .HasColumnType("integer");
 
                     b.HasKey("WidgetId");
-
-                    b.HasIndex("ConfigsId");
 
                     b.HasIndex("DashboardId");
 
@@ -263,15 +242,11 @@ namespace DataAccess.Persistence.Migrations.Postgre
 
             modelBuilder.Entity("Core.Entities.Widget", b =>
                 {
-                    b.HasOne("Core.Entities.Configs", "Configs")
-                        .WithMany()
-                        .HasForeignKey("ConfigsId");
-
                     b.HasOne("Core.Entities.Dashboard", null)
                         .WithMany("Widgets")
-                        .HasForeignKey("DashboardId");
-
-                    b.Navigation("Configs");
+                        .HasForeignKey("DashboardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Core.Entities.Dashboard", b =>

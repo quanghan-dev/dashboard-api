@@ -20,7 +20,6 @@ namespace DataAccess.Persistence
         {
             builder.Entity<Dashboard>().HasKey(entity => new { entity.Id });
             builder.Entity<Account>().HasKey(entity => new { entity.UserId });
-            builder.Entity<Configs>().HasKey(entity => new { entity.Id });
             builder.Entity<Contact>().HasKey(entity => new { entity.Id });
             builder.Entity<Core.Entities.Task>().HasKey(entity => new { entity.Id });
             builder.Entity<Widget>().HasKey(entity => new { entity.WidgetId });
@@ -34,7 +33,6 @@ namespace DataAccess.Persistence
                 "Host=localhost;Port=5432;Database=DashboardDB;Username=postgres;Password=123456");
 
         public DbSet<Account> Accounts { get; set; } = null!;
-        public DbSet<Configs> Configs { get; set; } = null!;
         public DbSet<Contact> Contacts { get; set; } = null!;
         public DbSet<Dashboard> Dashboards { get; set; } = null!;
         public DbSet<Core.Entities.Task> Tasks { get; set; } = null!;
