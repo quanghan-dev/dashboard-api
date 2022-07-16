@@ -12,6 +12,7 @@ namespace DataAccess.UnitOfWork.Impl
         private IContactRepository? _contactRepository;
         private ITaskRepository? _taskRepository;
         private ITokenRepository? _tokenRepository;
+        private IWidgetRepository? _widgetRepository;
 
         public IAccountRepository Accounts
         {
@@ -36,6 +37,11 @@ namespace DataAccess.UnitOfWork.Impl
         public ITokenRepository Tokens
         {
             get { _tokenRepository ??= new TokenRepository(_context); return _tokenRepository; }
+        }
+
+        public IWidgetRepository Widgets
+        {
+            get { _widgetRepository ??= new WidgetRepository(_context); return _widgetRepository; }
         }
 
         public UnitOfWork(DashboardContext context)

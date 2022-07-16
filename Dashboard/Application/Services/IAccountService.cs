@@ -25,5 +25,11 @@ namespace Application.Services
         /// <param name="account"></param>
         /// <returns>User Id</returns>
         Guid GetUserId(LoginAccount account);
+
+        /// <summary>
+        /// Check Active Account
+        /// </summary>
+        /// <param name="username"></param>
+        void CheckActiveAccount(string? username);
     }
 }

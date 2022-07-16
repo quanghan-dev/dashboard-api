@@ -33,6 +33,7 @@ namespace Core.Enums
             ErrorMessage.Invalid_Token => "Invalid Token",
             ErrorMessage.Resource_Not_Found => "Resource Not Found",
             ErrorMessage.Invalid_File => "Invalid File",
+            ErrorMessage.Inactive_Account => "Please activate your account via the link sent to your email",
             _ => throw new ArgumentException(message: "Invalid message")
         };
     }

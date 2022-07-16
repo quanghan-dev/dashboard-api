@@ -41,6 +41,7 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginAccount loginAccount)
         {
+            _accountService.CheckActiveAccount(loginAccount.Username);
             return Ok(await _tokenService.CreateToken(_accountService.GetUserId(loginAccount)));
         }
 
